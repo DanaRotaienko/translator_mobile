@@ -1,5 +1,4 @@
-import 'package:final_project/widgets/login-widgets.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:final_project/widgets/start-widgets.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -13,7 +12,7 @@ class LoginScreen extends StatelessWidget {
         bottomOpacity: 0.0,
         elevation: 0,
       ),
-      body: LoginWidget(),
+      body: const LoginWidget(),
     );
   }
 }

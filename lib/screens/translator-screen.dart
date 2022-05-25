@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/translations-list-widgets.dart';
@@ -15,8 +14,8 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
   int selectedPage = 0;
 
   final _pageOptions = [
-    TranslatorWidget(),
-    ListWidget()
+    const TranslatorWidget(),
+    const ListWidget()
   ];
 
   @override

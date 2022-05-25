@@ -1,8 +1,9 @@
-import 'package:final_project/screens/login-screen.dart';
+import 'package:final_project/screens/start-screen.dart';
 import 'package:final_project/screens/translator-screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

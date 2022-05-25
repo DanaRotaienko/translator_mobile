@@ -1,7 +1,10 @@
-import 'dart:collection';
-
-import 'package:flutter/cupertino.dart';
+import 'package:final_project/api/translator-api.dart';
+import 'package:final_project/constants/languages.dart';
+import 'package:final_project/models/TranslationDTO.dart';
+import 'package:final_project/models/translation.dart';
 import 'package:flutter/material.dart';
+
+import '../database/database.dart';
 
 class TranslatorWidget extends StatefulWidget {
   const TranslatorWidget({Key? key}) : super(key: key);
@@ -12,17 +15,37 @@ class TranslatorWidget extends StatefulWidget {
 
 class _TranslatorWidgetState extends State<TranslatorWidget> {
 
+  static TextEditingController inputController = TextEditingController();
+  String hint1 = '  Choose language';
+  String hint2 = '  Choose language';
+  var languages2 = Languages.languages;
+  String lang1 = 'eng';
+  String lang2 = 'eng';
+  String inputTr = '';
+  String output = 'Text';
+
+  bool isFavorite = false;
+
+  Future<String>? getTranslation() {
+    Translation translation =
+    Translation(lang1, lang2, inputTr);
+    return TranslatorApi.fetchTranslation(translation);
+  }
+
+
+  @override
+  void initState() {
+    inputController.text = inputTr;
+
+    super.initState();
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
-    var dropdownValue1;
-    String hint = '  Choose language';
-    String input;
-    String output;
-    var dropdownValue2;
-    final languages = ['English', 'Estonian', 'Finnish', 'German', 'Latvian',
-                       'Lithuanian', 'Lithuanian', 'Northern Sami', 'Russian',
-                       'Southern Sami', 'Võro'];
+    Object? dropdownValue1;
+    Object? dropdownValue2;
 
     return Column(
       children: [
@@ -34,16 +57,18 @@ class _TranslatorWidgetState extends State<TranslatorWidget> {
                 decoration: BoxDecoration(
                     color: Colors.grey[800], borderRadius: BorderRadius.circular(10)),
                 child: DropdownButton(
-                  underline: SizedBox(),
+                  underline: const SizedBox(),
                   value: dropdownValue1,
-                  hint: Text("${hint}"),
+                  hint: Text(hint1),
                   onChanged: (value) {
                     setState(() {
                       dropdownValue1 = value;
-                      hint = '  ${value}';
+                      lang1 = Languages.langCodes[Languages.languages.indexOf(value.toString())];
+                      hint1 = '  $value';
+                      languages2 = Languages.formatedLanguages(value.toString());
                     });
                   },
-                  items: languages
+                  items: Languages.languages
                       .map<DropdownMenuItem<String>>(
                           (String value) => DropdownMenuItem<String>(
                         value: value,
@@ -66,10 +91,10 @@ class _TranslatorWidgetState extends State<TranslatorWidget> {
                 decoration: BoxDecoration(
                     color: Colors.grey[800], borderRadius: BorderRadius.circular(10)),
                 child: DropdownButton(
-                  underline: SizedBox(),
+                  underline: const SizedBox(),
                   value: dropdownValue2,
-                  hint: Text('  Choose language'),
-                  items: languages
+                  hint: Text(hint2),
+                  items: languages2
                       .map<DropdownMenuItem<String>>(
                           (String value) => DropdownMenuItem<String>(
                         value: value,
@@ -79,6 +104,8 @@ class _TranslatorWidgetState extends State<TranslatorWidget> {
                   onChanged: (value) {
                     setState(() {
                       dropdownValue2 = value;
+                      hint2 = '  $value';
+                      lang2 = Languages.langCodes[Languages.languages.indexOf(value.toString())];
                     });
                   },
                 ),
@@ -86,13 +113,14 @@ class _TranslatorWidgetState extends State<TranslatorWidget> {
             ),
           ],
         ),
-        Container(
+        SizedBox(
           height: 200,
           width: 400,
           child: Card(
             color: Colors.grey[800],
             child: TextField(
-                decoration: InputDecoration (
+              controller: inputController,
+              decoration: const InputDecoration (
                   border: InputBorder.none,
                   focusedBorder: InputBorder.none,
                   enabledBorder: InputBorder.none,
@@ -102,19 +130,70 @@ class _TranslatorWidgetState extends State<TranslatorWidget> {
                   EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
                   hintText: 'Text',
               ),
+              onChanged: (input) {
+                  setState(() {
+                    if (inputController.text != '') {
+                      inputTr = inputController.text;
+                    }
+                  });
+              },
             ),
           ),
         ),
-        Container(
+        SizedBox(
           height: 200,
           width: 400,
-          child: Card(
-            child: ListTile(
-              title: Text("Text", style: TextStyle(color: Colors.grey[400]),),
-            ),
-            color: Colors.grey[800],
+          child: FutureBuilder<String>(
+            future: getTranslation(),
+            builder:
+                (BuildContext context, AsyncSnapshot<String> snapshot) {
+              String response = "";
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                response = "Translating...";
+              } else if (snapshot.connectionState == ConnectionState.done &&
+                  snapshot.hasData) {
+                response = snapshot.data ?? "Text";
+                output = response;
+              }
+              return Card(
+                   child: ListTile(
+                     title: Text(response, style: TextStyle(color: Colors.grey[400])),
+                   ),
+                   color: Colors.grey[800],
+              );
+            },
           ),
         ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: SizedBox(
+            width: 70,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.transparent,
+                elevation: 0,
+              ),
+              onPressed: () async {
+                isFavorite = isFavorite? false : true;
+                setState(() {});
+                await DatabaseHelper.instance.add(
+                  TranslationDto(source: lang1, target: lang2, input: inputTr, output: output)
+                );
+              },
+              child: Row(
+                children: [
+                    Padding(
+                      padding: EdgeInsets.zero,
+                      child: Icon(
+                          isFavorite? Icons.star : Icons.star_border,
+                          color: isFavorite? Colors.teal : Colors.grey,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        )
       ],
     );
   }
