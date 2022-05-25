@@ -148,12 +148,17 @@ class _TranslatorWidgetState extends State<TranslatorWidget> {
             builder:
                 (BuildContext context, AsyncSnapshot<String> snapshot) {
               String response = "";
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                response = "Translating...";
-              } else if (snapshot.connectionState == ConnectionState.done &&
-                  snapshot.hasData) {
-                response = snapshot.data ?? "Text";
-                output = response;
+              if (lang1.isNotEmpty && lang2.isNotEmpty && inputTr.isNotEmpty) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  response = "Translating...";
+                } else if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData) {
+                  response = snapshot.data ?? "Text";
+                  print(response);
+                  output = response;
+                }
+              } else {
+                response = 'Text';
               }
               return Card(
                    child: ListTile(
