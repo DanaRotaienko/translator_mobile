@@ -154,7 +154,6 @@ class _TranslatorWidgetState extends State<TranslatorWidget> {
                 } else if (snapshot.connectionState == ConnectionState.done &&
                     snapshot.hasData) {
                   response = snapshot.data ?? "Text";
-                  print(response);
                   output = response;
                 }
               } else {
