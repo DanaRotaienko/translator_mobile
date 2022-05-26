@@ -1,7 +1,8 @@
-# final_project
+# final_project Name
 
-A new Flutter project.
+Tartu NLP Translator 
 
-## Getting Started
+## Description
 
-This project is a translation mobile application that uses Tartu NLP Translator API's.
+This project is a translation mobile application.
+It uses Tartu NLP Translator API and has a connection to SQLite database.
