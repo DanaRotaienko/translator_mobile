@@ -24,13 +24,13 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.teal[900],
-        title: Opacity(
+        title: const Opacity(
           opacity: 0.6,
           child: Text(
             'Tartu NLP Translator',
             style: TextStyle(
               fontSize: 16.0,
-              color: Colors.cyan[300],
+              color: Colors.white,
             ),
           ),
         ),
