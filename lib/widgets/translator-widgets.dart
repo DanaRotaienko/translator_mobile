@@ -134,6 +134,7 @@ class _TranslatorWidgetState extends State<TranslatorWidget> {
                   setState(() {
                     if (inputController.text != '') {
                       inputTr = inputController.text;
+                      isFavorite = false;
                     }
                   });
               },

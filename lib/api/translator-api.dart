@@ -19,7 +19,8 @@ class TranslatorApi {
           "Content-Type": "application/json"
         },
         body: json);
-    Map<String, dynamic> responseMap = jsonDecode(response.body);
+    final codeUnits = response.body.codeUnits;
+    Map<String, dynamic> responseMap = jsonDecode(Utf8Decoder().convert(codeUnits));
     return responseMap["result"];
   }
 }
