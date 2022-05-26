@@ -16,11 +16,11 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       initialRoute: '/',
       routes: {
-        '/': (context) => LoginScreen(),
-        '/translator': (context) => TranslatorScreen()
+        '/': (context) => const StartScreen(),
+        '/translator': (context) => const TranslatorScreen()
       },
       theme: ThemeData(
-        colorScheme: ColorScheme.dark(),
+        colorScheme: const ColorScheme.dark(),
         primarySwatch: Colors.teal,
       ),
     );

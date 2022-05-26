@@ -6,7 +6,6 @@ class Languages {
   static List<String> formatedLanguages(String lang) {
     var temp = ['English', 'Estonian', 'Finnish', 'German', 'Latvian',
       'Lithuanian', 'Northern Sami', 'Russian', 'Southern Sami', 'Võro'];
-    print(temp);
     if (lang == 'English' ||
         lang == 'German' ||
         lang == 'Russian' ||

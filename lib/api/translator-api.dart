@@ -5,7 +5,7 @@ import '../models/translation.dart';
 
 class TranslatorApi {
   static Future<String>? fetchTranslation(Translation translation) async {
-    Map<String, String> requestBody = Map();
+    Map<String, String> requestBody = {};
     requestBody["text"] = translation.input;
     requestBody["src"] = translation.lang1;
     requestBody["tgt"] = translation.lang2;
@@ -20,7 +20,7 @@ class TranslatorApi {
         },
         body: json);
     final codeUnits = response.body.codeUnits;
-    Map<String, dynamic> responseMap = jsonDecode(Utf8Decoder().convert(codeUnits));
+    Map<String, dynamic> responseMap = jsonDecode(const Utf8Decoder().convert(codeUnits));
     return responseMap["result"];
   }
 }
